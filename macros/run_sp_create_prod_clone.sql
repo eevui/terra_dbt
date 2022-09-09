@@ -1,6 +1,6 @@
 {% macro run_sp_create_prod_clone() %}
     {% set clone_query %}
-    call near._internal.create_prod_clone(
+    call terra._internal.create_prod_clone(
         'terra',
         'terra_dev',
         'dbt_cloud'
