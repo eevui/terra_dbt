@@ -16,5 +16,5 @@ SELECT
 FROM
     {{ source(
         "chainwalkers",
-        "terra_blocks"
+        "terra2_blocks"
     ) }}

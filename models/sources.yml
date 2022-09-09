@@ -9,7 +9,7 @@ sources:
       error_after: { count: 24, period: hour }
     loaded_at_field: _inserted_timestamp
     tables:
-      - name: terra_blocks
+      - name: terra2_blocks
         description: "Blocks from the Terra chain. Note always use the latest inserted timestamp as duplicates can exist in this table!"
         columns:
           - name: record_id
@@ -32,7 +32,7 @@ sources:
             description: The time this row was ingested by Chainwalkers
           - name: _inserted_timestamp
             description: The time this row was inserted into Snowflake
-      - name: terra_txs
+      - name: terra2_txs
         description: "Txs from the Terra chain. Note always use the latest inserted timestamp as duplicates can exist in this table!"
         columns:
           - name: record_id
