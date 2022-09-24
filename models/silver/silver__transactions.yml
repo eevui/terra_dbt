@@ -1,0 +1,85 @@
+version: 2
+
+models:
+  - name: silver__transactions
+    description: |-
+      This table records all the transactions of the Terra2 blockchain.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - tx_id
+            - block_id
+
+    columns:
+      - name: tx_id
+        description: "{{ doc('tx_id') }}"
+        tests:
+          - not_null
+          - unique
+
+      - name: block_timestamp
+        description: "{{ doc('block_timestamp') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_row_values_to_have_recent_data:
+              datepart: day
+              interval: 1
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - TIMESTAMP_NTZ
+
+      - name: block_id
+        description: "{{ doc('block_id') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - NUMBER
+                - FLOAT
+
+      - name: authorizer_public_key
+        description: "{{ doc('authorizer_public_key') }}"
+        tests:
+
+      - name: tx_sender
+        description: "{{ doc('tx_sender') }}"
+        tests:
+
+      - name: gas_limit
+        description: "{{ doc('gas_limit') }}"
+        tests:
+
+      - name: fee_raw
+        description: "{{ doc('fee_raw') }}"
+        tests:
+
+      - name: fee_denom
+        description: "{{ doc('fee_denom') }}"
+        tests:
+
+      - name: memo
+        description: "{{ doc('memo') }}"
+        tests:
+
+      - name: tx_body
+        description: "{{ doc('tx_body') }}"
+        tests:
+
+      - name: tx_result
+        description: "{{ doc('tx_result') }}"
+        tests:
+
+      - name: tx
+        description: "{{ doc('tx') }}"
+        tests:
+
+      - name: _ingested_at
+        description: "{{ doc('_ingested_at') }}"
+
+      - name: _inserted_timestamp
+        description: "{{ doc('_inserted_timestamp') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - TIMESTAMP_NTZ
