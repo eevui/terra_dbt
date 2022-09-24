@@ -6,6 +6,7 @@
 ) }}
 
 WITH base_blocks AS (
+
     SELECT
         record_id,
         offset_id,
@@ -55,4 +56,3 @@ SELECT
     *
 FROM
     FINAL
-    
