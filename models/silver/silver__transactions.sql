@@ -1,5 +1,6 @@
 {{ config(
     materialized = 'incremental',
+    cluster_by = ['_inserted_timestamp::DATE'],
     unique_key = 'tx_id'
 ) }}
 
@@ -31,9 +32,7 @@ silver_txs AS (
         tx_id,
         block_id,
         block_timestamp,
-        network,
-        chain_id,
-        tx :auth_info :signer_infos [0] :public_key :key :: STRING AS pub_key,
+        tx :auth_info :signer_infos [0] :public_key :key :: STRING AS authorizer_public_key,
         TRY_BASE64_DECODE_STRING(
             tx :tx_result :events [0] :attributes [0] :key
         ) AS msg0_key,
@@ -64,9 +63,7 @@ SELECT
     tx_id,
     block_id,
     block_timestamp,
-    network,
-    chain_id,
-    pub_key,
+    authorizer_public_key,
     tx_sender,
     gas_limit,
     fee_raw,
