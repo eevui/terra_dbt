@@ -30,3 +30,4 @@ SELECT
     validators_hash
 FROM
     blocks
+    
