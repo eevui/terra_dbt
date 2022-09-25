@@ -32,7 +32,13 @@ silver_txs AS (
         tx_id,
         block_id,
         block_timestamp,
-        tx :auth_info :signer_infos [0] :public_key :key :: STRING AS authorizer_public_key,
+        object_keys(
+            tx :auth_info :signer_infos [0] :mode_info
+        ) [0] :: STRING AS auth_type,
+        COALESCE(
+            tx :auth_info :signer_infos [0] :public_key :key :: ARRAY,
+            tx :auth_info :signer_infos [0] :public_key :public_keys :: ARRAY
+        ) AS authorizer_public_key,
         TRY_BASE64_DECODE_STRING(
             tx :tx_result :events [0] :attributes [0] :key
         ) AS msg0_key,
@@ -51,8 +57,6 @@ silver_txs AS (
         tx :auth_info :fee :amount [0] :amount :: NUMBER AS fee_raw,
         tx :auth_info :fee :amount [0] :denom :: STRING AS fee_denom,
         tx :body :memo :: STRING AS memo,
-        tx :body AS tx_body,
-        tx :tx_result AS tx_result,
         tx,
         _ingested_at,
         _inserted_timestamp
@@ -63,14 +67,13 @@ SELECT
     tx_id,
     block_id,
     block_timestamp,
+    auth_type,
     authorizer_public_key,
     tx_sender,
     gas_limit,
     fee_raw,
     fee_denom,
     memo,
-    tx_body,
-    tx_result,
     tx,
     _ingested_at,
     _inserted_timestamp

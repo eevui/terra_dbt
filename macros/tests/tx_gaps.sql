@@ -25,7 +25,6 @@ model_name AS (
 SELECT
     block_base.{{ column_block }},
     {{ column_tx_count }},
-    model_name.{{ column_block }},
     model_tx_count
 FROM
     block_base
