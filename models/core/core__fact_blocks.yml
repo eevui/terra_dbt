@@ -8,6 +8,9 @@ models:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
             - block_id
+      - sequence_gaps:
+          column_name: block_id
+          where: BLOCK_TIMESTAMP < CURRENT_DATE
 
     columns:
       - name: BLOCK_ID
@@ -26,6 +29,9 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
                 - TIMESTAMP_NTZ
+          - dbt_expectations.expect_row_values_to_have_recent_data:
+              datepart: day
+              interval: 1
 
       - name: BLOCK_HASH
         description: "{{ doc('block_hash')}}"
@@ -35,7 +41,7 @@ models:
               column_type_list:
                 - STRING
                 - VARCHAR
-      
+
       - name: CHAIN_ID
         description: "{{ doc('chain_id')}}"
         tests:
@@ -80,7 +86,7 @@ models:
               column_type_list:
                 - STRING
                 - VARCHAR
-      
+
       - name: BLOCK_HEIGHT
         description: "{{ doc('block_height')}}"
         tests:
@@ -88,7 +94,7 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
                 - NUMBER
-      
+
       - name: LAST_BLOCK_ID
         description: "{{ doc('last_block_id')}}"
         tests:
@@ -98,7 +104,7 @@ models:
                 - ARRAY
                 - VARIANT
                 - OBJECT
-      
+
       - name: LAST_COMMIT
         description: "{{ doc('last_commit')}}"
         tests:
@@ -115,7 +121,7 @@ models:
               column_type_list:
                 - STRING
                 - VARCHAR
-      
+
       - name: LAST_RESULTS_HASH
         description: "{{ doc('last_results_hash')}}"
         tests:
@@ -124,7 +130,7 @@ models:
               column_type_list:
                 - STRING
                 - VARCHAR
-      
+
       - name: NEXT_VALIDATORS_HASH
         description: "{{ doc('next_validators_hash')}}"
         tests:
