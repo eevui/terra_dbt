@@ -7,6 +7,7 @@
 {%- set previous_column = "prev_" ~ column_name -%}
 WITH source AS (
     SELECT
+        block_timestamp,
         {{ partition_sql + "," if partition_sql }}
         {{ column_name }},
         LAG(
@@ -21,6 +22,7 @@ WITH source AS (
         {{ model }}
 )
 SELECT
+    block_timestamp,
     {{ partition_sql + "," if partition_sql }}
     {{ previous_column }},
     {{ column_name }},

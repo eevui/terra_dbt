@@ -11,7 +11,10 @@ SELECT
     authorizer_public_key,
     tx_sender,
     gas_limit,
-    fee_raw,
+    fee_raw / pow(
+        10,
+        6
+    ) AS fee,
     fee_denom,
     memo,
     tx
