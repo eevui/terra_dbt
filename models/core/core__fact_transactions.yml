@@ -41,8 +41,8 @@ models:
         tests:
           - not_null
 
-      - name: tx_sender
-        description: "{{ doc('tx_sender') }}"
+      - name: authorizer_public_key
+        description: "{{ doc('authorizer_public_key') }}"
         tests:
           - not_null
 

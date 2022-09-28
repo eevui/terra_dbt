@@ -71,7 +71,7 @@ SELECT
     block_id,
     block_timestamp,
     auth_type,
-    authorizer_public_key AS tx_sender,
+    authorizer_public_key,
     gas_limit,
     fee_raw,
     fee_denom,

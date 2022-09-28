@@ -21,9 +21,6 @@ models:
       - name: authorizer_public_key
         description: "{{ doc('authorizer_public_key') }}"
 
-      - name: tx_sender
-        description: "{{ doc('tx_sender') }}"
-
       - name: gas_limit
         description: "{{ doc('gas_limit') }}"
 
