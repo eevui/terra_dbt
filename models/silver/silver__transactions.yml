@@ -39,6 +39,15 @@ models:
       - name: tx
         description: "{{ doc('tx') }}"
 
+      - name: codespace
+        description: "{{ doc('codespace') }}"
+
+      - name: tx_code
+        description: "{{ doc('tx_code') }}"
+
+      - name: tx_succeeded
+        description: "{{ doc('tx_succeeded') }}"
+
       - name: _ingested_at
         description: "{{ doc('_ingested_at') }}"
 

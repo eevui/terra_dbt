@@ -41,8 +41,8 @@ models:
         tests:
           - not_null
 
-      - name: authorizer_public_key
-        description: "{{ doc('authorizer_public_key') }}"
+      - name: tx_sender
+        description: "{{ doc('tx_sender') }}"
         tests:
           - not_null
 
@@ -59,6 +59,25 @@ models:
 
       - name: memo
         description: "{{ doc('memo') }}"
+
+      - name: codespace
+        description: "{{ doc('codespace') }}"
+
+      - name: tx_code
+        description: "{{ doc('tx_code') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - NUMBER
+
+      - name: tx_succeeded
+        description: "{{ doc('tx_succeeded') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - BOOLEAN
 
       - name: tx
         description: "{{ doc('tx') }}"
