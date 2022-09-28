@@ -10,6 +10,7 @@ SELECT
     auth_type,
     authorizer_public_key,
     gas_limit,
+    gas_used,
     fee_raw / pow(
         10,
         6

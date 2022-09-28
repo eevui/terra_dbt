@@ -51,6 +51,11 @@ models:
         tests:
           - not_null
 
+      - name: gas_used
+        description: "{{ doc('gas_limit') }}"
+        tests:
+          - not_null
+
       - name: fee_raw
         description: "{{ doc('fee_raw') }}"
 
