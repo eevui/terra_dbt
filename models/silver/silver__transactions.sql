@@ -32,6 +32,7 @@ silver_txs AS (
         tx_id,
         block_id,
         block_timestamp,
+        chain_id AS blockchain,
         object_keys(
             tx :auth_info :signer_infos [0] :mode_info
         ) [0] :: STRING AS auth_type,
@@ -52,6 +53,13 @@ silver_txs AS (
         tx :auth_info :fee :amount [0] :amount :: NUMBER AS fee_raw,
         tx :auth_info :fee :amount [0] :denom :: STRING AS fee_denom,
         tx :body :memo :: STRING AS memo,
+        tx :tx_result :code :: NUMBER AS tx_code,
+        IFF(
+            tx_code = 0,
+            TRUE,
+            FALSE
+        ) AS tx_succeeded,
+        tx :tx_result :codespace :: STRING AS codespace,
         tx,
         _ingested_at,
         _inserted_timestamp
@@ -63,11 +71,14 @@ SELECT
     block_id,
     block_timestamp,
     auth_type,
-    authorizer_public_key,
+    authorizer_public_key AS tx_sender,
     gas_limit,
     fee_raw,
     fee_denom,
     memo,
+    codespace,
+    tx_code,
+    tx_succeeded,
     tx,
     _ingested_at,
     _inserted_timestamp

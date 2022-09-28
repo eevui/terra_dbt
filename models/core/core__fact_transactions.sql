@@ -8,7 +8,7 @@ SELECT
     block_id,
     block_timestamp,
     auth_type,
-    authorizer_public_key,
+    authorizer_public_key AS tx_sender,
     gas_limit,
     fee_raw / pow(
         10,
@@ -16,6 +16,9 @@ SELECT
     ) AS fee,
     fee_denom,
     memo,
+    codespace,
+    tx_code,
+    tx_succeeded,
     tx
 FROM
     {{ ref('silver__transactions') }}
