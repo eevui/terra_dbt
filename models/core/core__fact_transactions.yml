@@ -1,0 +1,90 @@
+version: 2
+
+models:
+  - name: core__fact_transactions
+    description: |-
+      This table records all the transactions of the Terra2 blockchain.
+
+    columns:
+      - name: tx_id
+        description: "{{ doc('tx_id') }}"
+        tests:
+          - not_null
+          - unique
+          - tx_gaps:
+              column_name: tx_id
+              column_block: block_id
+              column_tx_count: tx_count
+              where: BLOCK_TIMESTAMP < CURRENT_DATE
+
+      - name: block_timestamp
+        description: "{{ doc('block_timestamp') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_row_values_to_have_recent_data:
+              datepart: day
+              interval: 1
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - TIMESTAMP_NTZ
+
+      - name: block_id
+        description: "{{ doc('block_id') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - NUMBER
+
+      - name: auth_type
+        description: "{{ doc('auth_type') }}"
+        tests:
+          - not_null
+
+      - name: authorizer_public_key
+        description: "{{ doc('authorizer_public_key') }}"
+        tests:
+          - not_null
+
+      - name: gas_limit
+        description: "{{ doc('gas_limit') }}"
+        tests:
+          - not_null
+
+      - name: gas_used
+        description: "{{ doc('gas_limit') }}"
+        tests:
+          - not_null
+
+      - name: fee_raw
+        description: "{{ doc('fee_raw') }}"
+
+      - name: fee_denom
+        description: "{{ doc('fee_denom') }}"
+
+      - name: memo
+        description: "{{ doc('memo') }}"
+
+      - name: codespace
+        description: "{{ doc('codespace') }}"
+
+      - name: tx_code
+        description: "{{ doc('tx_code') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - NUMBER
+
+      - name: tx_succeeded
+        description: "{{ doc('tx_succeeded') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - BOOLEAN
+
+      - name: tx
+        description: "{{ doc('tx') }}"
+        tests:
+          - not_null
