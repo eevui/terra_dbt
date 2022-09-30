@@ -61,3 +61,68 @@ sources:
             description: The time this row was ingested by Chainwalkers
           - name: _inserted_timestamp
             description: The time this row was inserted into Snowflake
+  - name: anchor
+    schema: anchor
+    database: flipside_prod_db
+    tables:
+      - name: bonds
+      - name: borrows
+      - name: burns
+      - name: collateral
+      - name: deposits
+      - name: gov_staking
+      - name: gov_submit_proposal
+      - name: gov_vote
+      - name: liquidations
+      - name: redeem
+      - name: repay
+      - name: reward_claims
+  - name: astroport
+    schema: astroport
+    database: flipside_prod_db
+    tables:
+      - name: pool_reserves
+      - name: swaps
+  - name: gold
+    schema: gold
+    database: flipside_prod_db
+    tables:
+      - name: terra_address_labels
+      - name: terra_address_tags
+      - name: terra_daily_balances
+      - name: terra_prices
+  - name: terra
+    schema: terra
+    database: flipside_prod_db
+    tables:
+      - name: airdrop_claims
+      - name: daily_balances
+      - name: gov_submit_proposal
+      - name: gov_vote
+      - name: nft_metadata
+      - name: oracle_prices
+      - name: reward
+      - name: staking
+      - name: swaps
+      - name: tax_rate
+      - name: transfers
+      - name: validator_labels
+      - name: validator_voting_power
+  - name: terraswap
+    schema: terraswap
+    database: flipside_prod_db
+    tables:
+      - name: lp_actions
+      - name: lp_stake
+      - name: pool_reserves
+      - name: swaps
+  - name: terra_sv
+    schema: terra_sv
+    database: flipside_prod_db
+    tables:
+      - name: blocks
+      - name: labels
+      - name: msgs
+      - name: msg_events
+      - name: transactions
+      - name: transitions
