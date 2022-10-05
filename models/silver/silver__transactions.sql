@@ -49,6 +49,11 @@ silver_txs AS (
         tx :body :messages [0] :grantee :: STRING AS tx_grantee,
         tx :auth_info :fee :granter :: STRING AS tx_granter,
         tx :auth_info :fee :payer :: STRING AS tx_payer,
+        CASE
+            WHEN msg0_key = 'spender' THEN msg0_value
+            WHEN msg0_key = 'granter' THEN tx_payer
+            WHEN msg0_key = 'fee' THEN tx_grantee
+        END AS tx_sender,
         tx :auth_info :fee :gas_limit :: NUMBER AS gas_limit,
         tx :tx_result :gasUsed :: NUMBER AS gas_used,
         tx :auth_info :fee :amount [0] :amount :: NUMBER AS fee_raw,
@@ -73,6 +78,7 @@ SELECT
     block_timestamp,
     auth_type,
     authorizer_public_key,
+    tx_sender,
     gas_limit,
     gas_used,
     fee_raw,

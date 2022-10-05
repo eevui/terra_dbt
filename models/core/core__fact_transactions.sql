@@ -9,6 +9,7 @@ SELECT
     block_timestamp,
     auth_type,
     authorizer_public_key,
+    tx_sender,
     gas_limit,
     gas_used,
     fee_raw / pow(
