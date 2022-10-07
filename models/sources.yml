@@ -126,3 +126,8 @@ sources:
       - name: msg_events
       - name: transactions
       - name: transitions
+  - name: labels
+    schema: silver_crosschain
+    database: flipside_prod_db
+    tables:
+      - name: address_labels
