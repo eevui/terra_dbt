@@ -49,10 +49,13 @@ silver_txs AS (
         tx :body :messages [0] :grantee :: STRING AS tx_grantee,
         tx :auth_info :fee :granter :: STRING AS tx_granter,
         tx :auth_info :fee :payer :: STRING AS tx_payer,
+        TRY_BASE64_DECODE_STRING(
+            tx :tx_result :events [1] :attributes [0] :value
+        ) AS acc_seq,
         CASE
             WHEN msg0_key = 'spender' THEN msg0_value
             WHEN msg0_key = 'granter' THEN tx_payer
-            WHEN msg0_key = 'fee' THEN tx_grantee
+            WHEN msg0_key = 'fee' THEN COALESCE(tx_grantee, SPLIT(acc_seq, '/') [0] :: STRING)
         END AS tx_sender,
         tx :auth_info :fee :gas_limit :: NUMBER AS gas_limit,
         tx :tx_result :gasUsed :: NUMBER AS gas_used,
