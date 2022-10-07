@@ -1,7 +1,5 @@
 # Terra DBT Project
 
-nonsense change
-
 Curated SQL Views and Metrics for the Terra Blockchain.
 
 What's Terra? Learn more [here](https://www.terra.money/)
