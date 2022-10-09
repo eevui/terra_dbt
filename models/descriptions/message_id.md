@@ -1,6 +1,6 @@
 
 {% docs message_id %}
 
-transaction hash concat message index
+The primary key for the messages table. It is a concatenation of the transaction ID and the message index.
 
 {% enddocs %}
