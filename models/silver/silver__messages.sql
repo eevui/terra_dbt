@@ -1,217 +1,155 @@
-{{ config(
-    materialized = 'incremental',
-    cluster_by = ['_inserted_timestamp::DATE'],
-    unique_key = 'tx_id'
-) }}
+{{
+    config(
+        materialized="incremental",
+        cluster_by=["_inserted_timestamp"],
+        unique_key="message_id",
+    )
+}}
 
-WITH txs AS (
+with
+    txs as (
 
-    SELECT
-        tx_id,
-        block_timestamp,
-        block_id,
-        tx,
-        tx_succeeded,
-        VALUE :events AS logs,
-        VALUE :msg_index :: NUMBER AS msg_index,
-        tx :body :messages [0] :"@type" :: STRING AS msg_type,
-        _ingested_at,
-        _inserted_timestamp
-    FROM
-        {{ ref('silver__transactions') }},
-        LATERAL FLATTEN(
-            input => tx :tx_result :log
-        )
-),
-blocks AS (
-    SELECT
-        block_id,
-        chain_id
-    FROM
-        {{ ref('silver__blocks') }}
-),
-events AS (
-    SELECT
-        tx_id,
-        tx,
-        block_timestamp,
-        block_id,
-        msg_index,
-        tx_succeeded,
-        tx :body :messages [0] AS msg_value,
-        msg_type,
-        VALUE AS logs,
-        VALUE :attributes AS event_attributes,
-        VALUE :type :: STRING AS event_type,
-        INDEX AS event_index,
-        _ingested_at,
-        _inserted_timestamp
-    FROM
-        txs,
-        LATERAL FLATTEN(
-            input => logs
-        )
-),
-attributes AS (
-    SELECT
-        tx_id,
-        tx,
-        block_timestamp,
-        block_id,
-        event_attributes,
-        event_type,
-        event_index,
-        tx_succeeded,
-        msg_index,
-        msg_type,
-        INDEX AS attribute_index,
-        VALUE AS ATTRIBUTE,
-        VALUE :key :: STRING AS attribute_key,
-        IFF(
-            VALUE :key = 'amount',
-            SPLIT_PART(
-                TRIM(
-                    REGEXP_REPLACE(
-                        VALUE :value :: STRING,
-                        '[^[:digit:]]',
-                        ' '
-                    )
-                ),
-                ' ',
-                0
-            ),
-            VALUE :value :: STRING
-        ) AS attribute_value,
-        IFF(
-            VALUE :key = 'amount',
-            REGEXP_SUBSTR(
-                VALUE :value :: STRING,
-                '[A-Za-z]+'
-            ),
-            NULL
-        ) AS currency,
-        LAST_VALUE(currency) over (
-            PARTITION BY tx_id,
-            event_type
-            ORDER BY
-                currency DESC
-        ) AS last_currency,
-        COUNT(attribute_key) over (
-            PARTITION BY attribute_key,
-            event_index,
-            msg_index,
-            tx_id
-        ) AS key_frequency,
-        ROW_NUMBER() over (
-            PARTITION BY attribute_key,
-            event_index,
-            msg_index,
-            tx_id
-            ORDER BY
-                attribute_key
-        ) - 1 AS key_index,
-        _ingested_at,
-        _inserted_timestamp
-    FROM
-        events,
-        LATERAL FLATTEN(
-            input => event_attributes
-        )
-    ORDER BY
-        tx_id,
-        msg_index,
-        event_type,
-        attribute_index
-),
-third_table AS (
-    SELECT
-        tx_id,
-        tx,
-        event_type,
-        event_attributes,
-        event_index,
-        msg_index,
-        msg_type,
-        tx_succeeded,
-        attributes.block_id,
-        chain_id,
-        block_timestamp,
-        IFF(
-            key_frequency > 1,
-            CONCAT(
-                attribute_key,
-                '_',
-                key_index
-            ),
-            attribute_key
-        ) AS unique_attribute_key,
-        attribute_value,
-        OBJECT_AGG(
-            unique_attribute_key,
-            attribute_value :: variant
-        ) over (
-            PARTITION BY tx_id,
-            msg_index,
-            event_type
-        ) AS attribute_obj,
-        OBJECT_INSERT(
-            attribute_obj,
-            'currency',
-            last_currency
-        ) AS final_attrib_obj,
-        _ingested_at,
-        _inserted_timestamp
-    FROM
-        attributes
-        JOIN blocks
-        ON attributes.block_id = blocks.block_id
-),
-final_table AS (
-    SELECT
-        DISTINCT tx_id,
-        msg_index,
-        event_type,
-        chain_id,
-        msg_type,
-        tx_succeeded,
-        block_timestamp,
-        block_id,
-        final_attrib_obj,
-        _ingested_at,
-        _inserted_timestamp
-    FROM
-        third_table
-),
-FINAL AS (
-    SELECT
-        DISTINCT CONCAT(
+        select
             tx_id,
-            '-',
-            msg_index
-        ) AS message_id,
-        block_timestamp,
-        block_id,
-        tx_id,
-        tx_succeeded,
-        chain_id,
-        msg_index AS message_index,
-        msg_type AS message_type,
-        OBJECT_AGG(
+            block_timestamp,
+            block_id,
+            tx,
+            tx_succeeded,
+            value:events as logs,
+            value:message_index::number as message_index,
+            tx:body:messages[0]:"@type"::string as message_type,
+            _ingested_at,
+            _inserted_timestamp
+        from
+            {{ ref("silver__transactions") }},
+            lateral flatten(input => tx:tx_result:log)
+        where {{ incremental_load_filter("_inserted_timestamp") }}
+    ),
+    blocks as (
+        select block_id, chain_id
+        from {{ ref("silver__blocks") }}
+        where {{ incremental_load_filter("_inserted_timestamp") }}
+    ),
+    events as (
+        select
+            tx_id,
+            tx,
+            block_timestamp,
+            block_id,
+            message_index,
+            tx_succeeded,
+            tx:body:messages[0] as message_value,
+            message_type,
+            value as logs,
+            value:attributes as event_attributes,
+            value:type::string as event_type,
+            index as event_index,
+            _ingested_at,
+            _inserted_timestamp
+        from txs, lateral flatten(input => logs)
+    ),
+    attributes as (
+        select
+            tx_id,
+            tx,
+            block_timestamp,
+            block_id,
+            event_attributes,
             event_type,
-            final_attrib_obj
-        ) over (
-            PARTITION BY tx_id,
-            msg_index
-        ) AS attributes,
-        _ingested_at,
-        _inserted_timestamp
-    FROM
-        final_table
-    ORDER BY
-        tx_id,
-        message_index
-)
-SELECT
-    *
-FROM
-    FINAL
+            event_index,
+            tx_succeeded,
+            message_index,
+            message_type,
+            index as attribute_index,
+            value as attribute,
+            value:key::string as attribute_key,
+            iff(
+                value:key = 'amount',
+                regexp_substr(value:value::string, '[0-9]+'),
+                value:value::string
+            ) as attribute_value,
+            iff(
+                value:key = 'amount',
+                regexp_substr(value:value::string, '[A-Za-z]+'),
+                null
+            ) as currency,
+            last_value(currency) over (
+                partition by tx_id, event_type order by currency desc
+            ) as last_currency,
+            count(attribute_key) over (
+                partition by attribute_key, event_index, message_index, tx_id
+            ) as key_frequency,
+            row_number() over (
+                partition by attribute_key, event_index, message_index, tx_id
+                order by attribute_key
+            )
+            - 1 as key_index,
+            _ingested_at,
+            _inserted_timestamp
+        from events, lateral flatten(input => event_attributes)
+    ),
+    window_functions as (
+        select
+            tx_id,
+            tx,
+            event_type,
+            event_attributes,
+            event_index,
+            message_index,
+            message_type,
+            tx_succeeded,
+            attributes.block_id,
+            chain_id,
+            block_timestamp,
+            iff(
+                key_frequency > 1,
+                concat(attribute_key, '_', key_index),
+                attribute_key
+            ) as unique_attribute_key,
+            attribute_value,
+            object_agg(unique_attribute_key, attribute_value::variant) over (
+                partition by tx_id, message_index, event_type
+            ) as attribute_obj,
+            object_insert(
+                attribute_obj, 'currency', last_currency
+            ) as final_attrib_obj,
+            _ingested_at,
+            _inserted_timestamp
+        from attributes
+        join blocks on attributes.block_id = blocks.block_id
+    ),
+    distinct_events_table as (
+        select distinct
+            tx_id,
+            message_index,
+            event_type,
+            chain_id,
+            message_type,
+            tx_succeeded,
+            block_timestamp,
+            block_id,
+            final_attrib_obj,
+            _ingested_at,
+            _inserted_timestamp
+        from window_functions
+    ),
+    final_table as (
+        select distinct
+            concat(tx_id, '-', message_index) as message_id,
+            block_timestamp,
+            block_id,
+            tx_id,
+            tx_succeeded,
+            chain_id,
+            message_index,
+            message_type,
+            object_agg(event_type, final_attrib_obj) over (
+                partition by tx_id, message_index
+            ) as attributes,
+            _ingested_at,
+            _inserted_timestamp
+        from distinct_events_table
+        order by tx_id, message_index
+    )
+select *
+from final_table
