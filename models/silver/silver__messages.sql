@@ -22,10 +22,6 @@ WITH txs AS (
         LATERAL FLATTEN(
             input => tx :tx_result :log
         )
-    WHERE
-        ARRAY_SIZE(
-            tx :tx_result :log
-        ) > 1
 ),
 blocks AS (
     SELECT
