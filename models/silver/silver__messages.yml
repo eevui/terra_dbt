@@ -3,15 +3,21 @@ version: 2
 models:
   - name: silver__messages
     description: |-
-      This table records all the transactions of the Terra2 blockchain.
+      This table contains all the messages and their events of the Terra2 blockchain.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - message_id
 
     columns:
-      - name: message_id
+      - name: MESSAGE_ID
         description: "{{ doc('message_id') }}"
         tests:
+          - unique
           - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
+                - STRING
                 - VARCHAR
 
       - name: BLOCK_ID
@@ -32,7 +38,7 @@ models:
                 - TIMESTAMP_NTZ
 
 
-      - name: tx_id
+      - name: TX_ID
         description: "{{ doc('tx_id') }}"
         tests:
           - not_null
@@ -40,7 +46,7 @@ models:
               column_type_list:
                 - VARCHAR
 
-      - name: tx_succeeded
+      - name: TX_SUCCEEDED
         description: "{{ doc('tx_succeeded') }}"
         tests:
           - not_null
@@ -48,7 +54,7 @@ models:
               column_type_list:
                 - BOOLEAN
 
-      - name: chain_id
+      - name: CHAIN_ID
         description: "{{ doc('chain_id') }}"
         tests:
           - not_null
@@ -56,7 +62,7 @@ models:
               column_type_list:
                 - VARCHAR
 
-      - name: message_index
+      - name: MESSAGE_INDEX
         description: "{{ doc('message_index') }}"
         tests:
           - not_null
@@ -64,7 +70,7 @@ models:
               column_type_list:
                 - NUMBER
 
-      - name: message_type
+      - name: MESSAGE_TYPE
         description: "{{ doc('message_type') }}"
         tests:
           - not_null
@@ -72,7 +78,7 @@ models:
               column_type_list:
                 - VARCHAR
 
-      - name: attributes
+      - name: ATTRIBUTES
         description: "{{ doc('attributes') }}"
         tests:
           - not_null
@@ -80,10 +86,15 @@ models:
               column_type_list:
                 - OBJECT
 
-      - name: _ingested_at
+      - name: _INGESTED_AT
         description: "{{ doc('_ingested_at') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - TIMESTAMP_NTZ
 
-      - name: _inserted_timestamp
+      - name: _INSERTED_TIMESTAMP
         description: "{{ doc('_inserted_timestamp') }}"
         tests:
           - not_null
