@@ -22,3 +22,4 @@ SELECT
     attributes
 FROM
     messages
+    
