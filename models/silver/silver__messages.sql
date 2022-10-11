@@ -149,7 +149,6 @@ with
             _ingested_at,
             _inserted_timestamp
         from distinct_events_table
-        order by tx_id, message_index
     )
 select *
 from final_table
