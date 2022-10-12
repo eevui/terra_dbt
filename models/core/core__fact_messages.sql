@@ -3,14 +3,14 @@
     secure = true
 ) }}
 
-with messages as (
+WITH messages AS (
 
-    select
+    SELECT
         *
-    from
+    FROM
         {{ ref('silver__messages') }}
 )
-select
+SELECT
     message_id,
     block_timestamp,
     block_id,
@@ -19,7 +19,7 @@ select
     chain_id,
     message_index,
     message_type,
+    message_value,
     attributes
-from
+FROM
     messages
-    
