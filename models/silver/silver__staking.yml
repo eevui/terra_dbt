@@ -31,7 +31,7 @@ models:
         tests:
           - dbt_expectations.expect_column_values_to_match_regex:
               regex: terra[0-9a-z]{39,39}
-      - name: EVENT_AMOUNT
+      - name: AMOUNT
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
@@ -41,15 +41,15 @@ models:
       - name: TX_ID
         tests:
           - not_null
-      - name: TX_STATUS
+      - name: TX_SUCCEEDED
         tests:
           - not_null
       - name: VALIDATOR_ADDRESS
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_match_regex:
-              regex: terravaloper1[0-9a-z]{39,39}
+              regex: terravaloper1[0-9a-z]
       - name: VALIDATOR_SRC_ADDRESS
         tests:
           - dbt_expectations.expect_column_values_to_match_regex:
-              regex: terravaloper1[0-9a-z]{39,39}
+              regex: terravaloper1[0-9a-z]

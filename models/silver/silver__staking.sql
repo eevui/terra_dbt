@@ -9,6 +9,7 @@
 with
     delegated as (
         select
+            'terra' AS BLOCKCHAIN,
             block_id,
             block_timestamp,
             tx_id,
@@ -32,6 +33,7 @@ with
     ),
     undelegated as (
         select
+            'terra' AS BLOCKCHAIN,
             block_id,
             block_timestamp,
             tx_id,
@@ -54,6 +56,7 @@ with
     ),
     redelegated as (
         select
+            'terra' AS BLOCKCHAIN,
             block_id,
             block_timestamp,
             tx_id,
