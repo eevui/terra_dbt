@@ -15,6 +15,7 @@ WITH txs AS (
         VALUE :events AS logs,
         VALUE :msg_index :: NUMBER AS message_index,
         tx :body :messages [0] :"@type" :: STRING AS message_type,
+        tx :body :messages [message_index] AS message_value,
         _ingested_at,
         _inserted_timestamp
     FROM
@@ -42,7 +43,7 @@ events AS (
         block_id,
         message_index,
         tx_succeeded,
-        tx :body :messages [0] AS message_value,
+        message_value,
         message_type,
         VALUE AS logs,
         VALUE :attributes AS event_attributes,
@@ -68,6 +69,7 @@ attributes AS (
         tx_succeeded,
         message_index,
         message_type,
+        message_value,
         INDEX AS attribute_index,
         VALUE AS ATTRIBUTE,
         VALUE :key :: STRING AS attribute_key,
@@ -124,6 +126,7 @@ window_functions AS (
         event_index,
         message_index,
         message_type,
+        message_value,
         tx_succeeded,
         attributes.block_id,
         chain_id,
@@ -165,6 +168,7 @@ distinct_events_table AS (
         event_type,
         chain_id,
         message_type,
+        message_value,
         tx_succeeded,
         block_timestamp,
         block_id,
@@ -188,6 +192,7 @@ final_table AS (
         chain_id,
         message_index,
         message_type,
+        message_value,
         OBJECT_AGG(
             event_type,
             final_attrib_obj
