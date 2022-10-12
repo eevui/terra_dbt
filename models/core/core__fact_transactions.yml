@@ -6,7 +6,7 @@ models:
       This table records all the transactions of the Terra2 blockchain.
 
     columns:
-      - name: tx_id
+      - name: TX_ID
         description: "{{ doc('tx_id') }}"
         tests:
           - not_null
@@ -17,7 +17,7 @@ models:
               column_tx_count: tx_count
               where: BLOCK_TIMESTAMP < CURRENT_DATE
 
-      - name: block_timestamp
+      - name: BLOCK_TIMESTAMP
         description: "{{ doc('block_timestamp') }}"
         tests:
           - not_null
@@ -28,7 +28,7 @@ models:
               column_type_list:
                 - TIMESTAMP_NTZ
 
-      - name: block_id
+      - name: BLOCK_ID
         description: "{{ doc('block_id') }}"
         tests:
           - not_null
@@ -36,39 +36,44 @@ models:
               column_type_list:
                 - NUMBER
 
-      - name: auth_type
+      - name: AUTH_TYPE
         description: "{{ doc('auth_type') }}"
         tests:
           - not_null
 
-      - name: authorizer_public_key
+      - name: AUTHORIZER_PUBLIC_KEY
         description: "{{ doc('authorizer_public_key') }}"
         tests:
           - not_null
 
-      - name: gas_limit
+      - name: TX_SENDER
+        description: "{{ doc('tx_sender') }}"
+        tests:
+          - not_null
+
+      - name: GAS_LIMIT
         description: "{{ doc('gas_limit') }}"
         tests:
           - not_null
 
-      - name: gas_used
+      - name: GAS_USED
         description: "{{ doc('gas_limit') }}"
         tests:
           - not_null
 
-      - name: fee_raw
+      - name: FEE_RAW
         description: "{{ doc('fee_raw') }}"
 
-      - name: fee_denom
+      - name: FEE_DENOM
         description: "{{ doc('fee_denom') }}"
 
-      - name: memo
+      - name: MEMO
         description: "{{ doc('memo') }}"
 
-      - name: codespace
+      - name: CODESPACE
         description: "{{ doc('codespace') }}"
 
-      - name: tx_code
+      - name: TX_CODE
         description: "{{ doc('tx_code') }}"
         tests:
           - not_null
@@ -76,7 +81,7 @@ models:
               column_type_list:
                 - NUMBER
 
-      - name: tx_succeeded
+      - name: TX_SUCCEEDED
         description: "{{ doc('tx_succeeded') }}"
         tests:
           - not_null
@@ -84,7 +89,7 @@ models:
               column_type_list:
                 - BOOLEAN
 
-      - name: tx
+      - name: TX
         description: "{{ doc('tx') }}"
         tests:
           - not_null
