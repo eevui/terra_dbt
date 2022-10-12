@@ -1,5 +1,5 @@
 {% docs message_value %}
 
-The value of the messages in an array.
+The value of the messages based on the index.
 
 {% enddocs %}

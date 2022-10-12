@@ -15,7 +15,7 @@ WITH txs AS (
         VALUE :events AS logs,
         VALUE :msg_index :: NUMBER AS message_index,
         tx :body :messages [0] :"@type" :: STRING AS message_type,
-        tx :body :messages AS message_value,
+        tx :body :messages [message_index] AS message_value,
         _ingested_at,
         _inserted_timestamp
     FROM
