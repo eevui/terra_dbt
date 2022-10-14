@@ -89,12 +89,6 @@ attributes AS (
             ),
             NULL
         ) AS currency,
-        LAST_VALUE(currency) over (
-            PARTITION BY tx_id,
-            event_type
-            ORDER BY
-                currency DESC
-        ) AS last_currency,
         COUNT(attribute_key) over (
             PARTITION BY attribute_key,
             event_index,
@@ -140,6 +134,16 @@ window_functions AS (
             ),
             attribute_key
         ) AS unique_attribute_key,
+        IFF(
+            key_frequency > 1,
+            CONCAT(
+                'currency',
+                '_',
+                key_index
+            ),
+            'currency'
+        ) AS unique_currency_key,
+        currency,
         attribute_value,
         OBJECT_AGG(
             unique_attribute_key,
@@ -149,10 +153,17 @@ window_functions AS (
             message_index,
             event_type
         ) AS attribute_obj,
-        OBJECT_INSERT(
+        OBJECT_AGG(
+            unique_currency_key,
+            currency :: variant
+        ) over (
+            PARTITION BY tx_id,
+            message_index,
+            event_type
+        ) AS currency_obj,
+        json_merge(
             attribute_obj,
-            'currency',
-            last_currency
+            currency_obj
         ) AS final_attrib_obj,
         _ingested_at,
         _inserted_timestamp
