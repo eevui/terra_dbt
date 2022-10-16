@@ -31,7 +31,7 @@ What's Terra? Learn more [here](https://www.terra.money/)
 
 ### Create the Environment Variables
 
-1. Create a `.env` file with the following content in the terra_dbt directory (ex: terra_dbt/.env). Note that `.env` will not be commited to source.
+1. Create a `.env` file with the following content in the terra_dbt directory (ex: terra_dbt/.env). Note that `.env` will not be committed to source.
 
     ```
     SF_ACCOUNT=zsniary-metricsdao
