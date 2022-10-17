@@ -52,8 +52,7 @@ with
             {{ ref("silver__messages") }},
             lateral flatten(message_value:msgs) message_value
         where
-            tx_id = '40F38644FB9C32F8AF134BAEC61C07AFE92F1A247903D6CF192663F4B52D227C'
-            and message_value.value:"@type" ilike '%MsgDelegate'
+            message_value.value:"@type" ilike '%MsgDelegate'
             and message_type ilike '%MsgExec%'
             and tx_succeeded = 'True'
             and {{ incremental_load_filter("_inserted_timestamp") }}
