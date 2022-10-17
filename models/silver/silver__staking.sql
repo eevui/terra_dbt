@@ -49,7 +49,7 @@ with
     
     
         FROM 
-            terra_dev.silver.messages,
+            {{ ref("silver__messages") }},
             LATERAL flatten (message_value:msgs) message_value
         WHERE 
             tx_id = '40F38644FB9C32F8AF134BAEC61C07AFE92F1A247903D6CF192663F4B52D227C'
