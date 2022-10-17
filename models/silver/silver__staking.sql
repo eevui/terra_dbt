@@ -94,7 +94,7 @@ with
             MESSAGE_VALUE :delegator_address :: STRING AS delegator_address,
             {{change_decimal('MESSAGE_VALUE:amount:amount')}} AS amount,
             --MESSAGE_VALUE:amount:amount / pow(10, 6)::integer as amount,
-            MESSAGE_VALUE :validator_address :: STRING AS validator_address,
+            MESSAGE_VALUE :validator_src_address :: STRING AS validator_address,
             _ingested_at,
             _inserted_timestamp
 
