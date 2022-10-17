@@ -15,6 +15,7 @@ WITH txs AS (
         VALUE :events AS logs,
         VALUE :msg_index :: NUMBER AS message_index,
         tx :body :messages [0] :"@type" :: STRING AS message_type,
+        tx :body :messages [message_index] AS message_value,
         _ingested_at,
         _inserted_timestamp
     FROM
@@ -42,7 +43,7 @@ events AS (
         block_id,
         message_index,
         tx_succeeded,
-        tx :body :messages [0] AS message_value,
+        message_value,
         message_type,
         VALUE AS logs,
         VALUE :attributes AS event_attributes,
@@ -68,6 +69,7 @@ attributes AS (
         tx_succeeded,
         message_index,
         message_type,
+        message_value,
         INDEX AS attribute_index,
         VALUE AS ATTRIBUTE,
         VALUE :key :: STRING AS attribute_key,
@@ -87,12 +89,6 @@ attributes AS (
             ),
             NULL
         ) AS currency,
-        LAST_VALUE(currency) over (
-            PARTITION BY tx_id,
-            event_type
-            ORDER BY
-                currency DESC
-        ) AS last_currency,
         COUNT(attribute_key) over (
             PARTITION BY attribute_key,
             event_index,
@@ -124,6 +120,7 @@ window_functions AS (
         event_index,
         message_index,
         message_type,
+        message_value,
         tx_succeeded,
         attributes.block_id,
         chain_id,
@@ -137,6 +134,16 @@ window_functions AS (
             ),
             attribute_key
         ) AS unique_attribute_key,
+        IFF(
+            key_frequency > 1,
+            CONCAT(
+                'currency',
+                '_',
+                key_index
+            ),
+            'currency'
+        ) AS unique_currency_key,
+        currency,
         attribute_value,
         OBJECT_AGG(
             unique_attribute_key,
@@ -146,10 +153,17 @@ window_functions AS (
             message_index,
             event_type
         ) AS attribute_obj,
-        OBJECT_INSERT(
+        OBJECT_AGG(
+            unique_currency_key,
+            currency :: variant
+        ) over (
+            PARTITION BY tx_id,
+            message_index,
+            event_type
+        ) AS currency_obj,
+        json_merge(
             attribute_obj,
-            'currency',
-            last_currency
+            currency_obj
         ) AS final_attrib_obj,
         _ingested_at,
         _inserted_timestamp
@@ -165,6 +179,7 @@ distinct_events_table AS (
         event_type,
         chain_id,
         message_type,
+        message_value,
         tx_succeeded,
         block_timestamp,
         block_id,
@@ -188,6 +203,7 @@ final_table AS (
         chain_id,
         message_index,
         message_type,
+        message_value,
         OBJECT_AGG(
             event_type,
             final_attrib_obj
