@@ -2,7 +2,7 @@
     config(
         materialized="incremental",
         cluster_by=["_inserted_timestamp::DATE"],
-        unique_key="tx_id",
+        unique_key = "CONCAT_WS('-', tx_id, action, msg_index, delegator_address)"
     )
 }}
 
