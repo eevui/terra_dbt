@@ -1,0 +1,67 @@
+version: 2
+models:
+  - name: core__ez_staking
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - BLOCK_ID
+            - TX_ID
+            - ACTION
+            - MESSAGE_INDEX
+            - DELEGATOR_ADDRESS
+    columns:
+      - name: ACTION
+        description: "{{ doc('action') }}"
+        tests:
+          - not_null
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain') }}"
+        tests:
+          - not_null
+      - name: BLOCK_ID
+        description: "{{ doc('block_id') }}"
+        tests:
+          - not_null
+      - name: BLOCK_TIMESTAMP
+        description: "{{ doc('block_timestamp') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_row_values_to_have_recent_data:
+              datepart: day
+              interval: 1
+      - name: CHAIN_ID
+        description: "{{ doc('chain_id') }}"
+        tests:
+          - not_null
+      - name: DELEGATOR_ADDRESS
+        description: "{{ doc('delegator_address') }}"
+        tests:
+          - dbt_expectations.expect_column_values_to_match_regex:
+              regex: terra[0-9a-z]{39,39}
+      - name: AMOUNT
+        description: "{{ doc('amount') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - decimal
+                - float
+      - name: TX_ID
+        description: "{{ doc('tx_id') }}"
+        tests:
+          - not_null
+      - name: TX_SUCCEEDED
+        description: "{{ doc('tx_succeeded') }}"
+        tests:
+          - not_null
+      - name: VALIDATOR_ADDRESS
+        description: "{{ doc('validator_address') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_match_regex:
+              regex: terravaloper1[0-9a-z]
+      - name: VALIDATOR_SRC_ADDRESS
+        description: "{{ doc('validator_src_address') }}"
+        tests:
+          - dbt_expectations.expect_column_values_to_match_regex:
+              regex: terravaloper1[0-9a-z]
