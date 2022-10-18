@@ -7,8 +7,8 @@ models:
             - BLOCK_ID
             - TX_ID
             - ACTION
-            - MSG_INDEX
-            - DELIGATOR_ADDRESS
+            - MESSAGE_INDEX
+            - DELEGATOR_ADDRESS
     columns:
       - name: ACTION
         description: "{{ doc('action') }}"
