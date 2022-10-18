@@ -2,7 +2,7 @@
     config(
         materialized="incremental",
         cluster_by=["_inserted_timestamp::DATE"],
-        unique_key = "CONCAT_WS('-', tx_id, action, msg_index, delegator_address)"
+        unique_key = 'tx_id'
     )
 }}
 
@@ -131,6 +131,20 @@ with
         from redelegated
     )
 
-select union_delegations.*, src_address.validator_src_address
+select 
+    blockchain,
+    block_id,
+    block_timestamp,
+    union_delegations.tx_id,
+    tx_succeeded,
+    chain_id,
+    msg_index,
+    action,
+    delegator_address,
+    amount,
+    validator_address,
+    _ingested_at,
+    _inserted_timestamp, 
+    src_address.validator_src_address
 from union_delegations
 left outer join src_address on union_delegations.tx_id = src_address.tx_id
