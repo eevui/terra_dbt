@@ -34,7 +34,7 @@ models:
         tests:
           - not_null
       - name: DELEGATOR_ADDRESS
-        description: "{{ docs('delegator_address') }}"
+        description: "{{ doc('delegator_address') }}"
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_match_regex:
