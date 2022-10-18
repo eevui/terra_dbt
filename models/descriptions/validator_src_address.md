@@ -2,4 +2,4 @@
 
 validator to remove delegation FROM
 
-{% enddocs}
+{% enddocs %}
