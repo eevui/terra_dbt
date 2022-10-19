@@ -4,11 +4,7 @@ models:
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
-            - BLOCK_ID
-            - TX_ID
-            - ACTION
-            - MSG_INDEX
-            - DELEGATOR_ADDRESS 
+            - STAKING_ID
     columns:
       - name: ACTION
         description: "{{ doc('action') }}"

@@ -2,7 +2,7 @@
     config(
         materialized="incremental",
         cluster_by=["_inserted_timestamp::DATE"],
-        unique_key = 'tx_id'
+        unique_key = "staking_id",
     )
 }}
 
@@ -129,9 +129,19 @@ with
         union all
         select *
         from redelegated
-    )
+    ),
 
+final_table AS (
 select 
+    DISTINCT CONCAT(
+            union_delegations.tx_id,
+            '-',
+            action,
+            '-',
+            msg_index,
+            '-',
+            delegator_address
+        ) AS staking_id,
     blockchain,
     block_id,
     block_timestamp,
@@ -148,3 +158,9 @@ select
     src_address.validator_src_address
 from union_delegations
 left outer join src_address on union_delegations.tx_id = src_address.tx_id
+)
+
+SELECT
+    *
+FROM 
+    final_table
