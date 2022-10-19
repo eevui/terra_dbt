@@ -85,7 +85,7 @@ attributes AS (
             VALUE :key = 'amount',
             REGEXP_SUBSTR(
                 VALUE :value :: STRING,
-                '[A-Za-z]+'
+                '[^[:digit:]](.*)'
             ),
             NULL
         ) AS currency,
