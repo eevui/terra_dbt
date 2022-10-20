@@ -27,4 +27,4 @@ SELECT
     blockchain,
     transfer_type
 FROM
-    final_table
+    transfers
