@@ -38,7 +38,7 @@ WITH flattened_attributes AS (
         _ingested_at,
         _inserted_timestamp
     FROM
-        terra_dev.silver.messages,
+        {{ ref("silver__messages") }},
         LATERAL FLATTEN(
             input => attributes :transfer,
             outer => TRUE
