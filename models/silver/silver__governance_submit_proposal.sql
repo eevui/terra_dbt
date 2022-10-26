@@ -34,3 +34,18 @@ AND _inserted_timestamp >= (
 )
 {% endif %}
 )
+
+SELECT 
+    block_id,
+    block_timestamp,
+    blockchain,
+    chain_id,
+    tx_id,
+    TX_succeeded,
+    proposer,
+    proposal_id,
+    proposal_type,
+    _ingested_at,
+    _inserted_timestamp
+FROM    
+    base 
