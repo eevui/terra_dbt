@@ -14,8 +14,7 @@ with governance_votes as (
         vote_option,
         vote_option_text,
         vote_weight,
-        tx_succeeded,
-        _inserted_timestamp
+        tx_succeeded
     from {{ ref('silver__governance_votes') }}
 )
 
