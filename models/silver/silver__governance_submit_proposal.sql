@@ -9,7 +9,7 @@ WITH base AS (
     Select 
         block_id,
         block_timestamp,
-        'Terra' As blockchain,
+        'terra' As blockchain,
         chain_id,
         TX_ID,
         TX_succeeded,
