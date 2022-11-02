@@ -95,7 +95,7 @@ models:
                 - VARCHAR
                 - STRING
 
-      - name: _inserted_timestamp
+      - name: _INSERTED_TIMESTAMP
         description: "{{ doc('_inserted_timestamp') }}"
         tests:
           - not_null
