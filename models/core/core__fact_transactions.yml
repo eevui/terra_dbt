@@ -41,6 +41,7 @@ models:
         description: "{{ doc('auth_type') }}"
         tests:
           - not_null
+        
 
       - name: AUTHORIZER_PUBLIC_KEY
         description: "{{ doc('authorizer_public_key') }}"
@@ -50,7 +51,10 @@ models:
       - name: TX_SENDER
         description: "{{ doc('tx_sender') }}"
         tests:
-          - not_null
+          - not_null:
+              config:
+                severity: error
+                where: tx_succeeded = TRUE
 
       - name: GAS_LIMIT
         description: "{{ doc('gas_limit') }}"
