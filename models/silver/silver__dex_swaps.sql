@@ -27,7 +27,7 @@ SELECT
 FROM 
    TERRA_DEV.silver.messages
 where message_type ilike '%msgexecutecontract%'
-and message_json:msg in ('swap')
+and message_json:msg:swap is not null
 )
 
 execute_swap_operations AS (
