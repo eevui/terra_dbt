@@ -85,6 +85,41 @@ models:
         tests:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
+                - NUMBER
+                - FLOAT
+                - DOUBLE
+          
+      - name: from_decimal
+        description: "{{ doc('from_decimal') }}"
+        tests:
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+               column_type_list:
+                 - decimal
+                 - float
+                 - NUMBER
+          
+      - name: to_amount
+        description: "{{ doc('To_amount') }}"
+        tests:
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - NUMBER
+                - FLOAT
+                - DOUBLE
+          
+      - name: to_currency
+        description: "{{ doc('to_currency') }}"
+        tests:
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - STRING
+                - VARCHAR
+          
+      - name: to_decimal
+        description: "{{ doc('to_decimal') }}"
+        tests:
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
                 - decimal
                 - float
                 - NUMBER
@@ -96,3 +131,11 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
                 - timestamp_ntz
+                
+       - name: pool_ids
+        description: "{{ doc('pool_ids')}}"
+        tests:
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - NUMBER
+                - FLOAT
