@@ -29,9 +29,10 @@ SELECT
     message_value:contract :: STRING as contract_address
    
 FROM 
-   TERRA_DEV.silver.messages
+   {{ ref('silver__messages')}}
 where message_type ilike '%msgexecutecontract%'
-and message_json:msg in ('swap')
+and message_value:msg:swap is not null
+and {{ incremental_load_filter("_inserted_timestamp") }}
 )
 
 ,execute_swap_operations AS (
@@ -128,3 +129,22 @@ SELECT u.*, t.tx_sender as trader
     ON s.contract_address = l.address
             
 )
+
+SELECT
+    BLOCK_ID,
+    BLOCK_TIMESTAMP,
+    _inserted_timestamp,
+    BLOCKCHAIN,
+    CHAIN_ID,
+    tx_id,
+    tx_succeeded,
+    trader,
+    From_amount,
+    from_currency,
+    from_decimal,
+    to_amount,
+    to_currency,
+    to_decimal,
+    pool_id
+FROM
+    Final 

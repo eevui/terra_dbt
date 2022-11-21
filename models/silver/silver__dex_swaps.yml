@@ -66,8 +66,8 @@ models:
               column_type_list:
                 - boolean
 
-      - name: PROPOSER
-        description: "{{ doc('proposer') }}"
+      - name: from_currency
+        description: "{{ doc('from_currency') }}"
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
@@ -75,22 +75,23 @@ models:
                 - STRING
                 - VARCHAR
 
-      - name: PROPOSAL_ID
-        description: "{{ doc('proposal_id') }}"
+      - name: trader
+        description: "{{ doc('trader') }}"
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
-                - NUMBER
-
-      - name: PROPOSAL_TYPE
-        description: "{{ doc('proposal_type') }}"
-        tests:
-          - not_null
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list:
-                - VARCHAR
                 - STRING
+                - VARCHAR
+
+      - name: from_amount
+        description: "{{ doc('from_amount') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - decimal
+                - float
 
       - name: _INSERTED_TIMESTAMP
         description: "{{ doc('_inserted_timestamp') }}"
