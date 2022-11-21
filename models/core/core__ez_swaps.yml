@@ -1,6 +1,6 @@
 version: 2
 models:
-  - name: silver__dex_swaps
+  - name: core__ez_swaps
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
