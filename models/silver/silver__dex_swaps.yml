@@ -99,13 +99,13 @@ models:
                  - NUMBER
           
       - name: to_amount
-        description: "{{ doc('To_amount') }}"
+        description: "{{ doc('to_amount') }}"
         tests:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
                 - NUMBER
                 - FLOAT
-                - DOUBLE
+                - DECIMAL
           
       - name: to_currency
         description: "{{ doc('to_currency') }}"
@@ -132,10 +132,10 @@ models:
               column_type_list:
                 - timestamp_ntz
                 
-       - name: pool_ids
-        description: "{{ doc('pool_ids')}}"
+      - name: pool_ids
+        description: "{{ doc('pool_ids') }}"
         tests:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
-                - NUMBER
-                - FLOAT
+                - STRING
+                - VARCHAR
