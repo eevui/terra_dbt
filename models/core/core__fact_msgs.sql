@@ -8,7 +8,7 @@ WITH messages AS (
     SELECT
         *
     FROM
-        {{ ref('silver__msg') }}
+        {{ ref('silver__msgs') }}
 )
 
 SELECT

@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: silver__msg
+  - name: silver__msgs
     description: |-
       This table contains all the messages events of the Terra2 blockchain.
     tests:
