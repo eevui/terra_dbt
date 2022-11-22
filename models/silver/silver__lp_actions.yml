@@ -120,7 +120,7 @@ models:
           - dbt_expectations.expect_column_values_to_be_of_type:
               column_type: string
 
-      - name: decimal
+      - name: decimals
         description: "{{ doc('decimal') }}"
         tests:
           - not_null
