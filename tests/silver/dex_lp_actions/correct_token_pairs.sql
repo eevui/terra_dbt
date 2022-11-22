@@ -68,7 +68,7 @@ actual as (
         tx_id,
         amount,
         token
-    from {{ ref('silver__dex_lp_actions') }}
+    from {{ ref('silver__lp_actions') }}
 ),
 
 expected as (

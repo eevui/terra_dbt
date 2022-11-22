@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: silver__dex_lp_actions
+  - name: silver__lp_actions
     description: |-
       This table contains actions on liquidity pools (LP) that impact liquidity.
       These include the creation of LP tokens for providing liquidity, and the
