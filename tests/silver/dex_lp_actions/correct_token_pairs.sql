@@ -8,7 +8,7 @@ with pools as (
 lp_txs as (
     select
         *
-    from {{ ref('silver__mesages') }}
+    from {{ ref('silver__messages') }}
     where message_value:contract in (select address from pools)
 ),
 
