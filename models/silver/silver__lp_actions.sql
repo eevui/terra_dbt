@@ -16,6 +16,7 @@ with
         select
             block_id,
             block_timestamp,
+            'terra' as blockchain,
             tx_id,
             tx_succeeded,
             chain_id,
@@ -24,7 +25,7 @@ with
             message_index,
             nullif(
                 message_value:contract, message_value:msg:send:contract
-            )::string as pool_id,
+            )::string as pool_address,
             message_value:sender::string as liquidity_provider_address,
             attributes,
             path,
@@ -42,12 +43,13 @@ with
     intermediate_table as (
         select prelim_table.*, label
         from prelim_table
-        join pools on prelim_table.pool_id = pools.address
+        join pools on prelim_table.pool_address = pools.address
     ),
 final_table as (
     select
     block_id,
     block_timestamp,
+    blockchain,
     row_number() over (
         partition by tx_id order by _inserted_timestamp desc
     ) as action_index,
@@ -55,7 +57,7 @@ final_table as (
     tx_id,
     tx_succeeded,
     chain_id,
-    pool_id,
+    pool_address,
     liquidity_provider_address,
     case
         when path = 'refund_assets'
@@ -95,8 +97,9 @@ select
     action_id,
     tx_id,
     tx_succeeded,
+    blockchain,
     chain_id,
-    pool_id,
+    pool_address,
     liquidity_provider_address,
     action,
     amount,
