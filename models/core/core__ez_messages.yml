@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: core__fact_messages
+  - name: core__ez_messages
     description: |-
       This table records all the transactions of the Terra2 blockchain.
     tests:
