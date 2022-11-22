@@ -3,11 +3,7 @@ version: 2
 models:
   - name: core__fact_msg
     description: |-
-      This table contains all the messages and their events of the Terra2 blockchain.
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - message_id
+      This table contains all the messages events of the Terra2 blockchain.
 
     columns:
       - name: BLOCK_ID
@@ -75,7 +71,7 @@ models:
                 - STRING
                 - VARCHAR
 
-      - name: MESSAGE_INDEX
+      - name: MSG_INDEX
         description: "{{ doc('message_index') }}"
         tests:
           - not_null
@@ -83,7 +79,7 @@ models:
               column_type_list:
                 - NUMBER
 
-      - name: MESSAGE_TYPE
+      - name: MSG_TYPE
         description: "{{ doc('message_type') }}"
         tests:
           - not_null

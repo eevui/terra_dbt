@@ -19,8 +19,8 @@ SELECT
   tx_id,
   tx_succeeded,
   msg_group,
-  message_index,
-  message_type,
+  msg_index,
+  msg_type,
   msg
 FROM
   messages

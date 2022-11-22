@@ -3,7 +3,7 @@ version: 2
 models:
   - name: silver__msg
     description: |-
-      This table contains all the messages and their events of the Terra2 blockchain.
+      This table contains all the messages events of the Terra2 blockchain.
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:

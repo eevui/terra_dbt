@@ -19,10 +19,10 @@ SELECT
   tx_id,
   tx_succeeded,
   msg_group,
-  message_index,
-  message_type,
+  msg_index,
+  msg_type,
   attribute_key,
   attribute_value,
-  attribute_index,
+  attribute_index
 FROM
   msg_attributes

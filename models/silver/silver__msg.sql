@@ -140,7 +140,7 @@ add_chain_id AS (
 ),
 FINAL AS (
   SELECT
-    DISTINCT CONCAT(
+    CONCAT(
       tx_id,
       '-',
       msg_index
