@@ -15,7 +15,7 @@ models:
         description: "{{ doc('block_timestamp') }}"
 
       - name: action_id
-        description: "{{ doc('action_id') }}"
+        description: "{{ doc('liquidity_action_id') }}"
 
       - name: tx_id
         description: "{{ doc('tx_id') }}"

@@ -9,7 +9,7 @@ models:
 
     columns:
       - name: action_id
-        description: "{{ doc('action_id') }}"
+        description: "{{ doc('liquidity_action_id') }}"
         tests:
           - unique
           - not_null
