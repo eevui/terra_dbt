@@ -3,7 +3,9 @@ version: 2
 models:
   - name: core__ez_messages
     description: |-
-      This table records all the transactions of the Terra2 blockchain.
+      This table records all the transactions of the Terra2 blockchain. Messages, events and attributes are parsed and delivered in JSON format with 1 record per transaction, in this ez table.
+      The fact_msgs and fact_msg_attributes models return the same event and attribute data, but with less transformation.
+
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:

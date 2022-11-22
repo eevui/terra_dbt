@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: core__fact_msg
+  - name: core__fact_msgs
     description: |-
       This table contains all the messages events of the Terra2 blockchain.
 
