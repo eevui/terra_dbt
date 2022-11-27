@@ -13,7 +13,7 @@ WITH msg AS (
         chain_id,
         tx_id,
         tx_succeeded,
-        NULL AS decimals,
+        6 AS decimals,
         attributes :wasm :recipient :: STRING AS purchaser,
         attributes :wasm :seller :: STRING AS seller,
         attributes :wasm :amount :: NUMBER AS sales_amount,
@@ -24,7 +24,7 @@ WITH msg AS (
         _ingested_at,
         _inserted_timestamp
     FROM
-        messages
+        {{ ref("silver__messages") }}
     WHERE
         message_type = '/cosmwasm.wasm.v1.MsgExecuteContract'
         AND attributes :wasm :action_0 = 'settle'
